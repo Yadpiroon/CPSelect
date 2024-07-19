@@ -22,6 +22,7 @@ library(patchwork)
 library(cowplot)
 library(lattice)
 library(PASWR)
+library(factoextra)
 
 
 ####CP round 1 *4 ####
@@ -34,7 +35,7 @@ head(Round1)
 
 rrna <- ggplot(Round1, aes(x=Name, y=rna, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("ModifiedY", "ENFY")
+  geom_signif(comparisons = list(c("MD(+)", "EMF(+)")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -49,21 +50,19 @@ rrna <- ggplot(Round1, aes(x=Name, y=rna, fill =Poresize)) +
   }, textsize = 3, y_position = c(9.1)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("16SrRNA " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
-        legend.text = element_text(color = "black", size = 7), #detail site label
-        legend.title = element_text(color = "black", size = 7, face = "bold"), #site detail label
-        legend.position = c(0.1, 0.98),
-        legend.justification = c("left", "top"),
-        legend.box.just = "left",
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
+        legend.position = "none",
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
-  scale_x_discrete(limits=c("DefaultY", "DefaultN", "ModifiedY", "ModifiedN", "ENFY", "ENFN")) +
-  scale_fill_manual(values=c("#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3"),
+  scale_x_discrete(limits=c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
                     labels=c("No", "Yes"))
 
 rrna
@@ -73,7 +72,7 @@ save_plot("Bx1rna.jpeg", rrna)
 head(Round1)
 sfmd <- ggplot(Round1, aes(x=Name, y=sfmd, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("ModifiedY", "ENFY")
+  geom_signif(comparisons = list(c("MOD(+)", "EMF(+)")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -88,18 +87,19 @@ sfmd <- ggplot(Round1, aes(x=Name, y=sfmd, fill =Poresize)) +
   }, textsize = 3, y_position = c(4.2)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("sfmD " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
         plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
-  scale_x_discrete(limits=c("DefaultY", "DefaultN", "ModifiedY", "ModifiedN", "ENFY", "ENFN")) +
-  scale_fill_manual(values=c("#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3"),
+  scale_x_discrete(limits=c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
                     labels=c("No", "Yes"))
 
 sfmd
@@ -109,9 +109,9 @@ save_plot("Bx2sfmd.jpeg", sfmd)
 head(Round1)
 intl <- ggplot(Round1, aes(x=ID_site, y=intl, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.1) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("Defaultu", "Defaultd"), 
-                                 c("Modifiedu", "Modifiedd"),
-                                 c("ENFu", "ENFd")
+  geom_signif(comparisons = list(c("DF(U)", "DF(D)"), 
+                                 c("MD(U)", "MD(D)"),
+                                 c("EMF(U)", "EMF(D)")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -126,20 +126,21 @@ intl <- ggplot(Round1, aes(x=ID_site, y=intl, fill =Poresize)) +
   }, textsize = 3, y_position = c(11.5, 11.5, 11.5)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("intl1 " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
         plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
-  scale_x_discrete(limits=c("Defaultu", "Defaultd", 
-                            "Modifiedu", "Modifiedd", 
-                            "ENFu", "ENFd")) +
-  scale_fill_manual(values=c("#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3"),
+  scale_x_discrete(limits=c("DF(U)", "DF(D)", 
+                            "MD(U)", "MD(D)", 
+                            "EMF(U)", "EMF(D)")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
                     labels=c("No", "Yes"))
 
 intl
@@ -152,9 +153,9 @@ head(Round1)
 
 sul <- ggplot(Round1, aes(x=ID_site, y=sul, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.1) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("Defaultu", "Defaultd"), 
-                                 c("Modifiedu", "Modifiedd"),
-                                 c("ENFu", "ENFd")
+  geom_signif(comparisons = list(c("DF(U)", "DF(D)"), 
+                                 c("MD(U)", "MD(D)"),
+                                 c("EMF(U)", "EMF(D)")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -168,21 +169,22 @@ sul <- ggplot(Round1, aes(x=ID_site, y=sul, fill =Poresize)) +
     }
   }, textsize = 3, y_position = c(8.1, 8.1, 8.1)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
-  xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("Sul1 " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("sul1 " * (Log[10] * " copies/L"))) +
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
         plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
-  scale_x_discrete(limits=c("Defaultu", "Defaultd", 
-                            "Modifiedu", "Modifiedd", 
-                            "ENFu", "ENFd")) +
-  scale_fill_manual(values=c("#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3"),
+  scale_x_discrete(limits=c("DF(U)", "DF(D)", 
+                            "MD(U)", "MD(D)", 
+                            "EMF(U)", "EMF(D)")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
                     labels=c("No", "Yes"))
 
 sul
@@ -193,7 +195,7 @@ head(Round1)
 
 PMMoV <- ggplot(Round1, aes(x=Name, y=PMMoV, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("ModifiedY", "ENFY")
+  geom_signif(comparisons = list(c("MD(+)", "EMF(+)")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -208,18 +210,19 @@ PMMoV <- ggplot(Round1, aes(x=Name, y=PMMoV, fill =Poresize)) +
   }, textsize = 3, y_position = c(6.1)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("PMMoV " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
         plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
-  scale_x_discrete(limits=c("DefaultY", "DefaultN", "ModifiedY", "ModifiedN", "ENFY", "ENFN")) +
-  scale_fill_manual(values=c("#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3"),
+  scale_x_discrete(limits=c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
                     labels=c("No", "Yes"))
 
 PMMoV
@@ -230,7 +233,7 @@ head(Round1)
 
 crAss <- ggplot(Round1, aes(x=Name, y=crAss, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("ModifiedY", "ENFY")
+  geom_signif(comparisons = list(c("MD(+)", "EMF(+)")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -245,18 +248,19 @@ crAss <- ggplot(Round1, aes(x=Name, y=crAss, fill =Poresize)) +
   }, textsize = 3, y_position = c(8.1)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(expression("crAssphage " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
         plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
-  scale_x_discrete(limits=c("DefaultY", "DefaultN", "ModifiedY", "ModifiedN", "ENFY", "ENFN")) +
-  scale_fill_manual(values=c("#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3", "#FFF6E9", "#40A2E3"),
+  scale_x_discrete(limits=c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
                     labels=c("No", "Yes"))
 
 crAss
@@ -266,6 +270,83 @@ save_plot("BxcrAss.jpeg", crAss)
 fig1ADXcorrww <- plot_grid(rrna, sfmd, intl, sul, PMMoV, crAss, ncol = 2,
                          labels = c("a", "b", "c", "d", "e", "f"), label_size = 11)
 
+ggsave(file="fig1ADXcorrww.jpeg", fig1ADXcorrww, width= 190, height = 240, units = "mm", dpi=600)
+#######add the name####
+library(readxl)
+library(ggplot2)
+library(ggsignif)
+library(cowplot)
+
+Round1 <- read_excel("A2.xlsx", col_types = c("text", "text", "text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
+head(Round1)
+
+# Function to create the plots
+create_plot <- function(data, x_var, y_var, y_label, comparisons, y_position, plot_title, x_limits) {
+  ggplot(data, aes_string(x=x_var, y=y_var, fill="Poresize")) +
+    geom_boxplot(alpha=1, width=0.4, size=0.2) +
+    geom_jitter(size=0.4, alpha=0.5) +
+    geom_signif(comparisons = comparisons, test = "t.test", color = "black",
+                map_signif_level = function(p) {
+                  if(p < 0.001) {
+                    return("***")
+                  } else if(p < 0.01) {
+                    return("***")
+                  } else if(p < 0.05) {
+                    return("***")
+                  } else {
+                    return(sprintf("p = %.3f", p))
+                  }
+                }, textsize = 3, y_position = y_position) +
+    stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
+    xlab("Methods") + labs(fill = "MgCl2 Addition") + ylab(y_label) +
+    ggtitle(plot_title) +
+    theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"),
+          axis.title.y = element_text(color = "black", size = 9, face = "bold"),
+          legend.position = "none",
+          plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+          axis.text.x = element_text(color = "black", size = 9),
+          axis.text.y = element_text(color = "black", size = 9),
+          strip.text.y = element_text(color = "black", size = 5, face = "bold"),
+          panel.background = element_rect(fill = "white", colour = NA),
+          panel.grid.major = element_line(colour = "white", size = 0.1),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+    scale_x_discrete(limits=x_limits) +
+    scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+    scale_fill_manual(values=c("#B0B0B0", "#008080", "#B0B0B0", "#008080", "#B0B0B0", "#008080"),
+                      labels=c("No", "Yes"))
+}
+
+rrna <- create_plot(Round1, "Name", "rna", expression("16SrRNA " * (Log[10] * " copies/L")), 
+                    list(c("MD(+)", "EMF(+)")), c(9.1), "16SrRNA", 
+                    c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)"))
+
+sfmd <- create_plot(Round1, "Name", "sfmd", expression("sfmD " * (Log[10] * " copies/L")), 
+                    list(c("MOD(+)", "EMF(+)")), c(4.2), "sfmD", 
+                    c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)"))
+
+intl1 <- create_plot(Round1, "ID_site", "intl", expression("intl1 " * (Log[10] * " copies/L")), 
+                     list(c("DF(U)", "DF(D)"), c("MD(U)", "MD(D)"), c("EMF(U)", "EMF(D)")), 
+                     c(11.5, 11.5, 11.5), "intl1", 
+                     c("DF(U)", "DF(D)", "MD(U)", "MD(D)", "EMF(U)", "EMF(D)"))
+
+sul1 <- create_plot(Round1, "ID_site", "sul", expression("sul1 " * (Log[10] * " copies/L")), 
+                    list(c("DF(U)", "DF(D)"), c("MD(U)", "MD(D)"), c("EMF(U)", "EMF(D)")), 
+                    c(8.1, 8.1, 8.1), "sul1", 
+                    c("DF(U)", "DF(D)", "MD(U)", "MD(D)", "EMF(U)", "EMF(D)"))
+
+PMMoV <- create_plot(Round1, "Name", "PMMoV", expression("PMMoV " * (Log[10] * " copies/L")), 
+                     list(c("MD(+)", "EMF(+)")), c(6.1), "PMMoV", 
+                     c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)"))
+
+crAss <- create_plot(Round1, "Name", "crAss", expression("crAssphage " * (Log[10] * " copies/L")), 
+                     list(c("MD(+)", "EMF(+)")), c(8.1), "crAssphage", 
+                     c("DF(+)", "DF(-)", "MD(+)", "MD(-)", "EMF(+)", "EMF(-)"))
+
+# Combine the plots into a single figure
+fig1ADXcorrww <- plot_grid(rrna, sfmd, intl1, sul1, PMMoV, crAss, ncol = 2,
+                           labels = c("a", "b", "c", "d", "e", "f"), label_size = 11)
+
+# Save the combined figure
 ggsave(file="fig1ADXcorrww.jpeg", fig1ADXcorrww, width= 190, height = 240, units = "mm", dpi=600)
 
 
@@ -281,25 +362,21 @@ Mean <- round(mean(Round2$rna, na.rm = TRUE),2)
 rrna2 <- ggplot(Round2, aes(x=MethodID, y=rna, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
-  xlab("Methods") + labs(fill = "Site") + ylab(expression("16SrRNA " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
-        legend.text = element_text(color = "black", size = 7), #detail site label
-        legend.title = element_text(color = "black", size = 7, face = "bold"), #site detail label
-        legend.position = c(0.97, 0.97),
-        legend.justification = c("right", "top"),
-        legend.box.just = "right",
-        legend.box.margin = margin(t = -5, r = -5, b = -5, l = -5),
+  xlab("Methods") + labs(fill = "Sampling site") + ylab(expression("16SrRNA " * (Log[10] * " copies/L"))) +
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
+        legend.position = "none",
         plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   geom_hline(yintercept = Mean, linetype = "dashed", color = "grey") +
-  scale_x_discrete(limits=c("Modif05u", "Modif05d", "Defa45u", "Defa45d", "Modif45u", "Modif45d")) +
-  scale_fill_manual(values=c("#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276"),
+  scale_x_discrete(limits=c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
                     labels=c("Downstream", "Upstream"))
 
 rrna2
@@ -312,19 +389,21 @@ sfmd2 <- ggplot(Round2, aes(x=MethodID, y=sfmd, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "Site") + ylab(expression("sfmD " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   geom_hline(yintercept = 0.6, linetype = "dashed", color = "grey") +
   annotate("text", x = 5, y = 0.6, label = "LOQ", vjust = -0.5, hjust = 1, color = "black") +
-  scale_x_discrete(limits=c("Modif05u", "Modif05d", "Defa45u", "Defa45d", "Modif45u", "Modif45d")) +
-  scale_fill_manual(values=c("#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276"),
+  scale_x_discrete(limits=c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
                     labels=c("Downstream", "Upstream"))
 
 sfmd2
@@ -332,26 +411,34 @@ save_plot("Bx2sfmd2.jpeg", sfmd2)
 
 #intl1
 head(Round2)
-Mean <- round(mean(Round2$intl, na.rm = TRUE),2)
-intl2 <- ggplot(Round2, aes(x=MethodID, y=intl, fill =Poresize)) +
-  geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
-  stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
-  xlab("Methods") + labs(fill = "Site") + ylab(expression("intl1 " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
-        legend.position = "none",
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
-        strip.text.y = element_text(color = "black", size = 5, face = "bold"),
-        panel.background = element_rect(fill = "white", colour = NA),
-        panel.grid.major = element_line(colour = "white", size = 0.1),
-        panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+Mean <- round(mean(Round2$intl, na.rm = TRUE), 2)
+intl2 <- ggplot(Round2, aes(x = MethodID, y = intl, fill = Poresize)) +
+  geom_boxplot(alpha = 1, width = 0.4, size = 0.2) +
+  geom_jitter(size = 0.4, alpha = 0.5) +
+  stat_boxplot(geom = 'errorbar', width = 0.4, alpha = 1) +
+  xlab("Methods") +
+  labs(fill = "Site") +
+  ylab(expression("intl1 " * (Log[10] * " copies/L"))) +
+  theme(
+    axis.title.x = element_text(color = "black", size = 9, face = "bold"), # x-axis title
+    axis.title.y = element_text(color = "black", size = 9, face = "bold"), # y-axis title
+    legend.position = "none",
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+    axis.text.x = element_text(color = "black", size = 9),
+    axis.text.y = element_text(color = "black", size = 9),
+    strip.text.y = element_text(color = "black", size = 5, face = "bold"),
+    panel.background = element_rect(fill = "white", colour = NA),
+    panel.grid.major = element_line(colour = "white", size = 0.1),
+    panel.border = element_rect(colour = "black", fill = NA, size = 0.5)
+  ) +
   geom_hline(yintercept = Mean, linetype = "dashed", color = "grey") +
-  scale_x_discrete(limits=c("Modif05u", "Modif05d", "Defa45u", "Defa45d", "Modif45u", "Modif45d")) +
-  scale_fill_manual(values=c("#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276"),
-                    labels=c("Downstream", "Upstream"))
+  scale_x_discrete(limits = c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values = c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
+                    labels = c("Downstream", "Upstream"))
 
 intl2
+
 save_plot("Bxintl2.jpeg", intl2)
 
 
@@ -362,18 +449,20 @@ sul2 <- ggplot(Round2, aes(x=MethodID, y=sul, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "Site") + ylab(expression("sul1 " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   geom_hline(yintercept = Mean, linetype = "dashed", color = "grey") +
-  scale_x_discrete(limits=c("Modif05u", "Modif05d", "Defa45u", "Defa45d", "Modif45u", "Modif45d")) +
-  scale_fill_manual(values=c("#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276"),
+  scale_x_discrete(limits=c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
                     labels=c("Downstream", "Upstream"))
 
 sul2
@@ -385,8 +474,8 @@ head(Round2)
 Mean <- round(mean(Round2$PMMoV, na.rm = TRUE),2)
 PMMoV2 <- ggplot(Round2, aes(x=MethodID, y=PMMoV, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
-  geom_signif(comparisons = list(c("Modif05d", "Defa45d"),
-                                 c("Modif05d", "Modif45d")
+  geom_signif(comparisons = list(c("MD05D", "DF45D"),
+                                 c("MD05D", "MD45D")
   ), test = "t.test", color = "black",
   map_signif_level = function(p) {
     if(p < 0.001) {
@@ -401,18 +490,20 @@ PMMoV2 <- ggplot(Round2, aes(x=MethodID, y=PMMoV, fill =Poresize)) +
   }, textsize = 3, y_position = c(5.8, 6.1)) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "Site") + ylab(expression("PMMoV " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   geom_hline(yintercept = Mean, linetype = "dashed", color = "grey") +
-  scale_x_discrete(limits=c("Modif05u", "Modif05d", "Defa45u", "Defa45d", "Modif45u", "Modif45d")) +
-  scale_fill_manual(values=c("#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276"),
+  scale_x_discrete(limits=c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
                     labels=c("Downstream", "Upstream"))
 
 PMMoV2
@@ -425,18 +516,20 @@ crAss2 <- ggplot(Round2, aes(x=MethodID, y=crAss, fill =Poresize)) +
   geom_boxplot(alpha=1, width=0.4, size=0.2) + geom_jitter(size=0.4, alpha=0.5) +
   stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
   xlab("Methods") + labs(fill = "Site") + ylab(expression("CrAssphage " * (Log[10] * " copies/L"))) +
-  theme(axis.title.x = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนx
-        axis.title.y = element_text(color = "black", size = 7, face = "bold"), #ชื่อแกนy
+  theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนx
+        axis.title.y = element_text(color = "black", size = 9, face = "bold"), #ชื่อแกนy
         legend.position = "none",
-        axis.text.x = element_text(color = "black", size = 7),
-        axis.text.y = element_text(color = "black", size = 7),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+        axis.text.x = element_text(color = "black", size = 9),
+        axis.text.y = element_text(color = "black", size = 9),
         strip.text.y = element_text(color = "black", size = 5, face = "bold"),
         panel.background = element_rect(fill = "white", colour = NA),
         panel.grid.major = element_line(colour = "white", size = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
   geom_hline(yintercept = Mean, linetype = "dashed", color = "grey") +
-  scale_x_discrete(limits=c("Modif05u", "Modif05d", "Defa45u", "Defa45d", "Modif45u", "Modif45d")) +
-  scale_fill_manual(values=c("#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276", "#BBE2EC", "#0D9276"),
+  scale_x_discrete(limits=c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+  scale_fill_manual(values=c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
                     labels=c("Downstream", "Upstream"))
 
 crAss2
@@ -448,7 +541,134 @@ fig1ADXcorrww2 <- plot_grid(rrna2, sfmd2, intl2, sul2, PMMoV2, crAss2, ncol = 2,
 
 ggsave(file="fig1ADXcorrww2.jpeg", fig1ADXcorrww2, width= 190, height = 240, units = "mm", dpi=600)
 
+###add title###
+library(readxl)
+library(ggplot2)
+library(ggsignif)
+library(cowplot)
+
+Round2 <- read_excel("AX2.xlsx", col_types = c("text", "text", "text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
+head(Round2)
+
+# Function to create the plots with gene names at the top
+create_plot <- function(data, x_var, y_var, y_label, comparisons, y_position, plot_title, x_limits) {
+  ggplot(data, aes_string(x=x_var, y=y_var, fill="Poresize")) +
+    geom_boxplot(alpha=1, width=0.4, size=0.2) +
+    geom_jitter(size=0.4, alpha=0.5) +
+    geom_signif(comparisons = comparisons, test = "t.test", color = "black",
+                map_signif_level = function(p) {
+                  if(p < 0.001) {
+                    return("***")
+                  } else if(p < 0.01) {
+                    return("***")
+                  } else if(p < 0.05) {
+                    return("***")
+                  } else {
+                    return(sprintf("p = %.3f", p))
+                  }
+                }, textsize = 3, y_position = y_position) +
+    stat_boxplot(geom= 'errorbar' , width = 0.4, alpha=1) +
+    xlab("Methods") + labs(fill = "Sampling site") + ylab(y_label) +
+    ggtitle(plot_title) +
+    theme(axis.title.x = element_text(color = "black", size = 9, face = "bold"),
+          axis.title.y = element_text(color = "black", size = 9, face = "bold"),
+          plot.title = element_text(color = "black", size = 10, face = "bold", hjust = 0.5),
+          legend.position = "none",
+          plot.margin = margin(0.5, 0.5, 0.5, 0.5, "mm"),
+          axis.text.x = element_text(color = "black", size = 9),
+          axis.text.y = element_text(color = "black", size = 9),
+          strip.text.y = element_text(color = "black", size = 5, face = "bold"),
+          panel.background = element_rect(fill = "white", colour = NA),
+          panel.grid.major = element_line(colour = "white", size = 0.1),
+          panel.border = element_rect(colour = "black", fill=NA, size=0.5)) +
+    scale_x_discrete(limits=x_limits) +
+    scale_y_continuous(labels = function(x) format(round(x, 1), nsmall = 1)) +
+    scale_fill_manual(values=c("#FF8C00", "#007BFF", "#FF8C00", "#007BFF", "#FF8C00", "#007BFF"),
+                      labels=c("Downstream", "Upstream"))
+}
+
+# Creating individual plots with appropriate annotations
+Mean_rna <- round(mean(Round2$rna, na.rm = TRUE), 2)
+rrna2 <- create_plot(Round2, "MethodID", "rna", expression(Log[10] * " copies/L"), NULL, NULL, "16SrRNA",
+                     c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  geom_hline(yintercept = Mean_rna, linetype = "dashed", color = "grey")
+
+sfmd2 <- create_plot(Round2, "MethodID", "sfmd", expression(Log[10] * " copies/L"), NULL, NULL, "sfmD",
+                     c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  geom_hline(yintercept = 0.6, linetype = "dashed", color = "grey") +
+  annotate("text", x = 5, y = 0.6, label = "LOQ", vjust = -0.5, hjust = 1, color = "black")
+
+Mean_intl <- round(mean(Round2$intl, na.rm = TRUE), 2)
+intl2 <- create_plot(Round2, "MethodID", "intl", expression(Log[10] * " copies/L"), NULL, NULL, "intl1",
+                     c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  geom_hline(yintercept = Mean_intl, linetype = "dashed", color = "grey")
+
+Mean_sul <- round(mean(Round2$sul, na.rm = TRUE), 2)
+sul2 <- create_plot(Round2, "MethodID", "sul", expression(Log[10] * " copies/L"), NULL, NULL, "sul1",
+                    c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  geom_hline(yintercept = Mean_sul, linetype = "dashed", color = "grey")
+
+Mean_PMMoV <- round(mean(Round2$PMMoV, na.rm = TRUE), 2)
+PMMoV2 <- create_plot(Round2, "MethodID", "PMMoV", expression(Log[10] * " copies/L"),
+                      list(c("MD05D", "DF45D"), c("MD05D", "MD45D")), c(5.8, 6.1), "PMMoV",
+                      c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  geom_hline(yintercept = Mean_PMMoV, linetype = "dashed", color = "grey")
+
+Mean_crAss <- round(mean(Round2$crAss, na.rm = TRUE), 2)
+crAss2 <- create_plot(Round2, "MethodID", "crAss", expression(Log[10] * " copies/L"), NULL, NULL, "CrAssphage",
+                      c("MD05U", "MD05D", "DF45U", "DF45D", "MD45U", "MD45D")) +
+  geom_hline(yintercept = Mean_crAss, linetype = "dashed", color = "grey")
+
+# Combine the plots into a single figure
+fig1ADXcorrww2 <- plot_grid(rrna2, sfmd2, intl2, sul2, PMMoV2, crAss2, ncol = 2,
+                            labels = c("a", "b", "c", "d", "e", "f"), label_size = 11)
+
+# Save the combined figure
+ggsave(file="fig1ADXcorrww2.jpeg", fig1ADXcorrww2, width= 190, height = 240, units = "mm", dpi=600)
+
+
 #####color individuals by group####
+library(tidyverse)
+library(gapminder)
+library(ggplot2)
+library(ggbeeswarm)
+library(rstatix)
+library(ggpubr)
+library(dplyr)
+library(survival)
+library(corrplot)
+library(NADA)
+library(NADA2)
+library(EnvStats)
+library(stats)
+library(base)
+library(ggsignif)
+library(readxl)
+library(readxl)
+library(patchwork)
+library(cowplot)
+library(lattice)
+library(PASWR)
+library(dplyr)
+library(ggcorrplot)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+library(ggcorrplot)
+library(ggplot2)
+library(reshape2)
+library(tidyverse)
+library(vegan)
+library(grid)
+library(gridExtra)
+library(readr)
+library(FactoMineR)
+library(Factoshiny)
+library(missMDA)
+library(FactoInvestigate)
+library(car)
+library(factoextra)
+
 library(readr)
 iris <- read_csv("PCAmeth.csv", col_types = cols(...1 = col_character(), 
                                                  sfmD = col_number(), `16s` = col_number(), 
@@ -464,6 +684,20 @@ df
 iris<-data.frame(df)
 iris
 iris.pca <- PCA(iris[,-7], graph = FALSE)
+iris.pca
+
+# Contributions of variables to PC1
+fviz_contrib(iris.pca, choice = "var", axes = 1, top = 10) #sul1 + intl1 variables contributing to the principal components
+# Contributions of variables to PC2
+fviz_contrib(iris.pca, choice = "var", axes = 2, top = 10) #PMMoV + 16s variables contributing to the principal components
+
+dd <- fviz_contrib(iris.pca, choice = "var", axes = 1:2, top = 10) #sul1 and intl1 contributing to the principal components
+head(dd)
+
+fviz_pca_var(iris.pca, col.var = "contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07")
+)
+#sul1 and intl top contributing variables
 
 #finish look
 p <- fviz_pca_biplot(iris.pca, title = "Principal Component Analysis",
@@ -515,6 +749,14 @@ iris2 <- data.frame(df2)
 iris2
 iris.pca2 <- PCA(iris2[,-7], graph = FALSE)
 iris.pca2
+
+# Contributions of variables to PC1
+fviz_contrib(iris.pca2, choice = "var", axes = 1, top = 10) #16s variables contributing to the principal components
+# Contributions of variables to PC2
+fviz_contrib(iris.pca2, choice = "var", axes = 2, top = 10) #sfmd + 16s variables contributing to the principal components
+
+dd2 <- fviz_contrib(iris.pca2, choice = "var", axes = 1:2, top = 10) #sfmD PMMoV contributing to the principal components
+head(dd2)
 
 p2 <- fviz_pca_biplot(iris.pca2, title = "Principal Component Analysis",
                      geom.ind = "point",
@@ -2121,3 +2363,83 @@ wilcox.test(W$EC2, WO$EC2)
 t.test(W$EC2, WO$EC2, paired = F, alternative="greater")
 t.test(W$EC2, WO$EC2, paired = F, alternative="less")
 
+####heat map####
+library(readr)
+corr_cpx <- read_csv("corr_cpx.csv", col_types = cols(sfmD = col_number(), 
+                                                      `16SrRNA` = col_number(), intl1 = col_number(), 
+                                                      sul1 = col_number(), PMMoV = col_number(), 
+                                                      CrAss = col_number(), TotalColi = col_number(), 
+                                                      Ecoli = col_number(), `%rec.TC` = col_number(), 
+                                                      `%rec.EC` = col_number(), pH = col_number(), 
+                                                      Turbidity = col_number()))
+head(corr_cpx)
+
+attach(corr_cpx)
+
+p.mat <- cor_pmat(corr_cpx) #correlation matrix with p-values
+head(p.mat)
+p.mat
+m <- cor(corr_cpx) 
+m
+
+ggcorrplot(m, hc.order = TRUE, type = "lower", 
+           p.mat = p.mat, sig.level = .05, tl.cex = 7, pch = 4, insig = c("pch"), pch.cex = 3,
+           lab = TRUE, outline.color = "white", lab_col = "black", lab_size = 3,
+           ggtheme = ggplot2::theme_gray, colors = c("#F4EEEE", "#FFDBAA", "#96C291")) +
+  theme(legend.text = element_text(color = "black", family = "Arial", size = 4), #detail site label
+        legend.title = element_text(color = "black", family = "Arial", size = 4, face = "bold"), #site detail label
+        axis.text = element_text(color = "black", family = "Arial", size = 4),
+        panel.background = element_rect(fill = "grey95", colour = NA),
+        panel.grid.major = element_line(colour = "white", size = 0.2))
+
+#sig
+# new corr plot
+library(dplyr)
+library(ggcorrplot)
+library(ggplot2)
+library(reshape2)
+
+corr <- round(cor(corr_cpx), 2)
+
+p.df <- as.data.frame(ggcorrplot::cor_pmat(corr_cpx))
+
+labs.function = function(x){
+  case_when(x >= 0.05 ~ "",
+            x < 0.05 & x >= 0.01 ~ "*",
+            x < 0.01 & x >= 0.001 ~ "**",
+            x < 0.001 ~ "***")
+}
+
+p.labs = p.df %>%
+  mutate_all(labs.function)
+
+p.labs$Var1 = as.factor(rownames(p.labs))
+p.labs = melt(p.labs, id.vars = "Var1", variable.name = "Var2", value.name = "lab")
+
+cor_plot = ggcorrplot(corr, hc.order = F, type = "lower",
+                      lab = T, ggtheme = ggplot2::theme_gray, colors = c("#3EDBF0", "white", "#FF75A0")) +
+  theme(legend.text = element_text(color = "black", family = "Arial", size = 10), #detail site label
+        legend.title = element_text(color = "black", family = "Arial", size = 10, face = "bold"), #site detail label
+        axis.text = element_text(color = "black", family = "Arial", size = 2),
+        panel.background = element_rect(fill = "#F1F1F1", colour = NA),
+        panel.grid.minor = element_line(colour = "white", size = 0.2),
+        panel.grid.major = element_line(colour = "white", size = 0.2))
+
+p.labs$in.df = ifelse(is.na(match(paste0(p.labs$Var1, p.labs$Var2),
+                                  paste0(cor_plot[["data"]]$Var1, cor_plot[["data"]]$Var2))),
+                      "No", "Yes")
+
+p.labs = select(filter(p.labs, in.df == "Yes"), -in.df)
+
+cor.plot.labs = cor_plot +
+  geom_text(aes(x = p.labs$Var1,
+                y = p.labs$Var2),
+            label = p.labs$lab,
+            nudge_y = 0.25,
+            size = 5)
+
+cor.plot.labs
+
+
+ggsave(file="cor.plot.labsa.jpeg", cor.plot.labs,
+       width= 200, height = 200, units = "mm", dpi=600)
