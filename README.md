@@ -1,4 +1,4 @@
-# Comparative Performance of Electronegative Membrane Filtration and Automated Concentrating Pipette in Quantifying Antibiotic Resistance Genes and Microbial Markers in River Water Samples
+# Comparative Performance of Electronegative Membrane Filtration and Automated Concentrating Pipette for Detection of Antibiotic Resistance Genes and Microbial Markers in River Water Samples
 
 Yadpiroon Siria, Niva Sthapitb, Bikash Mallac, Sunayana Rayaa, Eiji Haramotoc,*
 
